@@ -12,9 +12,9 @@ class PrototypesController < ApplicationController
   end
 
   def create
-    prototype = Prototype.create(prototype_params)
+    @prototype = Prototype.create(prototype_params)
       
-    if prototype.save
+    if @prototype.save
       redirect_to root_path
     else
       render :new
@@ -30,10 +30,11 @@ class PrototypesController < ApplicationController
   end
 
   def update
-    prototype = Prototype.find(params[:id])
-    if prototype.update(prototype_params)
-      redirect_to prototype_path(prototype)
+    @prototype = Prototype.find(params[:id])
+    if @prototype.update(prototype_params)
+      redirect_to prototype_path(@prototype)
     else
+      @prototype = Prototype.find(params[:id])
       render :edit
     end
   end
@@ -47,7 +48,7 @@ class PrototypesController < ApplicationController
   private
 
   def prototype_params
-    params.permit(:title, :catch_copy, :concept, :image).merge(user_id: current_user.id)
+    params.require(:prototype).permit(:title, :catch_copy, :concept, :image).merge(user_id: current_user.id)
   end
 
   def access_restrictions
